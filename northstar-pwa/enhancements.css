@@ -7,6 +7,29 @@
 .fleet-tools input,
 .fleet-tools select { background: #08111f; border: 1px solid var(--border); border-radius: 11px; color: var(--text); font: inherit; margin-top: 7px; padding: 10px 12px; }
 .fleet-tools select { width: 100%; }
+#fleet-filter,
+#report-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: rgba(116, 224, 223, .08);
+  background-image: linear-gradient(45deg, transparent 50%, var(--cyan) 50%), linear-gradient(135deg, var(--cyan) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-repeat: no-repeat;
+  background-size: 5px 5px, 5px 5px;
+  border: 1px solid var(--strong);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04), 0 8px 22px rgba(0, 0, 0, .16);
+  color: var(--cyan);
+  cursor: pointer;
+  font-weight: 750;
+  padding: 10px 38px 10px 16px;
+}
+#fleet-filter:hover,
+#report-select:hover,
+#fleet-filter:focus,
+#report-select:focus { background-color: rgba(116, 224, 223, .13); border-color: var(--cyan); outline: none; }
+#fleet-filter:focus-visible,
+#report-select:focus-visible { box-shadow: 0 0 0 3px rgba(116, 224, 223, .18); }
 #fleet-match-count { align-self: center; color: var(--muted); font-size: .85rem; white-space: nowrap; }
 .badge.stale { border-color: #ff8b9166; color: #ffb4b8; }
 #connection-help { background: #ff8b910d; border: 1px solid #ff8b9166; border-radius: 13px; color: #ffced1; display: grid; gap: 4px; padding: 14px 16px; }
