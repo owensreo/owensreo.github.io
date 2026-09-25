@@ -22,6 +22,12 @@ function updateAutoRefreshLabel() {
   $('auto-refresh').textContent = `Auto-refresh ${minutes}:${seconds}`;
 }
 
+function updateClock() {
+  const now = new Date();
+  $('header-clock').dateTime = now.toISOString();
+  $('header-clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+}
+
 async function get(path) {
   const base = config().url.replace(/\/$/, '');
   const response = await fetch(base + path, {cache: 'no-store'});
@@ -295,13 +301,16 @@ $('raw-toggle').onclick = () => {
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 document.addEventListener('visibilitychange', () => {
+  updateClock();
   if (!document.hidden && Date.now() >= nextRefreshAt) refresh();
   else updateAutoRefreshLabel();
 });
 setInterval(() => {
+  updateClock();
   if (document.hidden || refreshInFlight) return;
   if (Date.now() >= nextRefreshAt) refresh();
   else updateAutoRefreshLabel();
 }, 1000);
+updateClock();
 updateAutoRefreshLabel();
 refresh();
