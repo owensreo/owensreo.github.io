@@ -10,6 +10,9 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  NORTHSTAR_PAGES_PATH: 2fa5556c815c8c06
+
 concurrency:
   group: dashboard-pages
   cancel-in-progress: true
@@ -22,6 +25,13 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+
+      - name: Check out Northstar dashboard source
+        uses: actions/checkout@v4
+        with:
+          repository: owensreo/tailscale-policy
+          ref: main
+          path: .northstar-source
 
       - name: Refresh dashboards from Nexus Host
         shell: bash
@@ -86,7 +96,8 @@ jobs:
         shell: bash
         run: |
           rm -rf _pages-site
-          mkdir -p _pages-site/731582 _pages-site/248907 _pages-site/694331 _pages-site/853104
+          mkdir -p _pages-site/731582 _pages-site/248907 _pages-site/694331 _pages-site/853104 _pages-site/${NORTHSTAR_PAGES_PATH}
+          cp -R .northstar-source/northstar-pwa/. _pages-site/${NORTHSTAR_PAGES_PATH}/
           cp analytics-pages/firewall-analytics.html _pages-site/731582/index.html
           cp analytics-pages/website-analytics.html _pages-site/248907/index.html
           cp analytics-pages/nexus-operations.html _pages-site/694331/index.html
