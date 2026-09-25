@@ -52,6 +52,7 @@ jobs:
               -e 's#href="/static/website.css"#href="./assets/website.css"#g' \
               -e 's|href="/events"|href="#events"|g' \
               -e 's|href="/history"|href="#history"|g' \
+              -e 's|<button class="refresh-button" type="button" data-refresh-button>Refresh</button>|<a class="refresh-button" href="./">Refresh</a>|g' \
               "$page"
           done
           sed -i -E 's/[Nn]etgear/Blue Ridge Firewall/g; s/[Rr]outer/firewall/g' analytics-pages/firewall-analytics.html
