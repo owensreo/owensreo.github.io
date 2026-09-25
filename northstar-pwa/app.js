@@ -6,6 +6,7 @@ let reportIndex = [];
 let reportCursor = 0;
 let fleetPeers = [];
 let latestReportState = 'Current';
+let installPrompt = null;
 const AUTO_REFRESH_MS = 30 * 60 * 1000;
 let nextRefreshAt = Date.now() + AUTO_REFRESH_MS;
 let refreshInFlight = false;
@@ -278,6 +279,28 @@ function openSettings() {
   $('api-url').value = config().url;
   $('settings-dialog').showModal();
 }
+
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  installPrompt = event;
+  $('install-dashboard').classList.add('install-ready');
+  $('install-dashboard').title = 'Install the Northstar dashboard on this device';
+});
+
+$('install-dashboard').onclick = async (event) => {
+  if (!installPrompt) return;
+  event.preventDefault();
+  installPrompt.prompt();
+  await installPrompt.userChoice;
+  installPrompt = null;
+  $('install-dashboard').classList.remove('install-ready');
+};
+
+window.addEventListener('appinstalled', () => {
+  installPrompt = null;
+  $('install-dashboard').textContent = 'Dashboard installed';
+  $('install-dashboard').classList.remove('install-ready');
+});
 
 $('settings').onclick = openSettings;
 $('refresh').onclick = refresh;
