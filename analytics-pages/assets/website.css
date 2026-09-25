@@ -1,0 +1,4 @@
+.website-kpis { grid-template-columns: repeat(6, minmax(120px, 1fr)); }
+.website-summary { grid-template-columns: minmax(0, 1.45fr) minmax(280px, .8fr); align-items: start; }
+@media (max-width: 1200px) { .website-kpis { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 760px) { .website-kpis { grid-template-columns: repeat(2, 1fr); } .website-summary { grid-template-columns: 1fr; } }

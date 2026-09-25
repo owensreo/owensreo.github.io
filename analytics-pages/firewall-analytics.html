@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Firewall Analytics · Blue Ridge Nexus</title>
+  <link rel="stylesheet" href="./assets/nexus-analytics.css">
+  <script src="./assets/nexus-clock.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to dashboard content</a>
+  <div class="page-shell">
+    <header class="app-header">
+  <div class="brand-cluster">
+    <img class="brand-logo" src="./assets/logo.svg" alt="Blue Ridge Systems">
+    <div class="digital-clock" data-eastern-clock aria-label="Current Eastern Time">
+      <time class="digital-clock-time" data-eastern-time>--:--:-- --</time>
+      <span class="digital-clock-label">Eastern Time</span>
+    </div>
+  </div>
+
+  <div class="header-copy">
+    <p class="eyebrow">Blue Ridge Nexus Analytics</p>
+    <h1>Firewall Analytics</h1>
+    <p class="subtitle">Compact security event health and collector freshness.</p>
+  </div>
+
+  <div class="header-status">
+    <span class="status-pill status-healthy">Current</span>
+    <span class="refresh-meta">Refreshed <time datetime="2026-09-21T05:28:28-04:00">05:28:28 AM</time></span>
+    <button class="refresh-button" type="button" data-refresh-button>Refresh</button>
+  </div>
+</header>
+    <main id="main-content" tabindex="-1">
+      
+<section class="kpi-grid" aria-label="Firewall key performance indicators">
+  <article class="kpi-card">
+  <span class="kpi-label">Events · 24h</span>
+  <strong class="kpi-value">5043</strong>
+  <span class="kpi-context">All classified events</span>
+</article><article class="kpi-card kpi-critical">
+  <span class="kpi-label">Critical</span>
+  <strong class="kpi-value">0</strong>
+  <span class="kpi-context">Requires attention</span>
+</article><article class="kpi-card kpi-warning">
+  <span class="kpi-label">Warnings</span>
+  <strong class="kpi-value">164</strong>
+  <span class="kpi-context">Review when practical</span>
+</article><article class="kpi-card">
+  <span class="kpi-label">Top category</span>
+  <strong class="kpi-value">Internal Lan Chatter</strong>
+  <span class="kpi-context">Highest volume · 24h</span>
+</article><article class="kpi-card kpi-healthy">
+  <span class="kpi-label">Collector heartbeat</span>
+  <strong class="kpi-value">5h ago</strong>
+  <span class="kpi-context">Age of last successful collector run</span>
+</article>
+</section>
+
+<section class="summary-grid" aria-label="Firewall event summary">
+  <article class="panel">
+    <div class="panel-heading">
+      <div><h2>Severity distribution</h2><p>Classified events during the last 24 hours</p></div>
+    </div>
+    <div class="severity-bar" role="img" aria-label="Critical 0, warning 164, info 4879">
+      
+      <span class="severity-segment severity-critical" style="width: 0.000%"></span>
+      
+      <span class="severity-segment severity-warning" style="width: 3.252%"></span>
+      
+      <span class="severity-segment severity-info" style="width: 96.748%"></span>
+      
+    </div>
+    <div class="severity-legend">
+      
+      <div class="legend-item"><span>Critical</span><strong>0</strong></div>
+      
+      <div class="legend-item"><span>Warning</span><strong>164</strong></div>
+      
+      <div class="legend-item"><span>Info</span><strong>4879</strong></div>
+      
+    </div>
+  </article>
+
+  <article class="panel">
+    <div class="panel-heading"><div><h2>Top categories</h2><p>Highest volume during the last 24 hours</p></div></div>
+    
+    <ol class="category-list">
+      
+      <li class="category-row">
+        <span class="category-name">Internal Lan Chatter</span>
+        <span class="status-pill status-info">info</span>
+        <strong class="category-count">4420</strong>
+      </li>
+      
+      <li class="category-row">
+        <span class="category-name">Remote Lan Access</span>
+        <span class="status-pill status-info">info</span>
+        <strong class="category-count">173</strong>
+      </li>
+      
+      <li class="category-row">
+        <span class="category-name">Dos Attack</span>
+        <span class="status-pill status-warning">warning</span>
+        <strong class="category-count">164</strong>
+      </li>
+      
+      <li class="category-row">
+        <span class="category-name">Dhcp</span>
+        <span class="status-pill status-info">info</span>
+        <strong class="category-count">141</strong>
+      </li>
+      
+      <li class="category-row">
+        <span class="category-name">Other Security</span>
+        <span class="status-pill status-info">info</span>
+        <strong class="category-count">127</strong>
+      </li>
+      
+      <li class="category-row">
+        <span class="category-name">Firmware</span>
+        <span class="status-pill status-info">info</span>
+        <strong class="category-count">14</strong>
+      </li>
+      
+    </ol>
+    
+  </article>
+</section>
+
+<section class="panel">
+  <div class="panel-heading">
+    <div><h2>Recent events</h2><p>Latest 12 records; select a message to expand it</p></div>
+    <a class="button-link" href="#events">View all events</a>
+  </div>
+  
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th scope="col">Time</th><th scope="col">Category</th><th scope="col">Severity</th><th scope="col">Message</th></tr></thead>
+      <tbody>
+        
+        <tr>
+          <td class="time-cell"><time datetime="2026-09-20T20:06:18">09/20/2026 08:06:18 PM</time></td>
+          <td>Other Security</td>
+          <td><span class="status-pill status-info">info</span></td>
+          <td class="message-cell"><button class="message-toggle" type="button" aria-expanded="false" title="Expand full message">[UPnP set event: add_nat_rule] from source: 192.168.1.17, Sunday, September 20, 2026 04:23:48</button></td>
+        </tr>
+        
+        <tr>
+          <td class="time-cell"><time datetime="2026-09-20T20:06:18">09/20/2026 08:06:18 PM</time></td>
+          <td>Other Security</td>
+          <td><span class="status-pill status-info">info</span></td>
+          <td class="message-cell"><button class="message-toggle" type="button" aria-expanded="false" title="Expand full message">[UPnP set event: GetExternalIPAddress] from source: 192.168.1.31, Sunday, September 20, 2026 04:21:06</button></td>
+        </tr>
+        
+        <tr>
+          <td class="time-cell"><time datetime="2026-09-20T20:06:18">09/20/2026 08:06:18 PM</time></td>
+          <td>Other Security</td>
+          <td><span class="status-pill status-info">info</span></td>
+          <td class="message-cell"><button class="message-toggle" type="button" aria-expanded="false" title="Expand full message">[UPnP set event: add_nat_rule] from source: 192.168.1.31, Sunday, September 20, 2026 04:21:06</button></td>
+        </tr>
+        
+        <tr>
+          <td class="time-cell"><time datetime="2026-09-20T20:06:18">09/20/2026 08:06:18 PM</time></td>
+          <td>Other Security</td>
+          <td><span class="status-pill status-info">info</span></td>
+          <td class="message-cell"><button class="message-toggle" type="button" aria-expanded="false" title="Expand full message">[UPnP set event: GetExternalIPAddress] from source: 192.168.1.14, Sunday, September 20, 2026 04:19:20</button></td>
+        </tr>
+        
+        <tr>
+          <td class="time-cell"><time datetime="2026-09-20T20:06:18">09/20/2026 08:06:18 PM</time></td>
+          <td>Other Security</td>
+          <td><span class="status-pill status-info">info</span></td>
+          <td class="message-cell"><button class="message-toggle" type="button" aria-expanded="false" title="Expand full message">[UPnP set event: add_nat_rule] from source: 192.168.1.14, Sunday, September 20, 2026 04:19:20</button></td>
+        </tr>
+        
+        <tr>
+          <td class="time-cell"><time datetime="2026-09-20T20:06:18">09/20/2026 08:06:18 PM</time></td>
+          <td>Other Security</td>
+          <td><span class="status-pill status-info">info</span></td>
+          <td class="message-cell"><button class="message-toggle" type="button" aria-expanded="false" title="Expand full message">[UPnP set event: GetExternalIPAddress] from source: 192.168.1.42, Sunday, September 20, 2026 04:18:10</button></td>
+        </tr>
+        
+        <tr>
+          <td class="time-cell"><time datetime="2026-09-20T20:06:18">09/20/2026 08:06:18 PM</time></td>
+          <td>Other Security</td>
+          <td><span class="status-pill status-info">info</span></td>
+          <td class="message-cell"><button class="message-toggle" type="button" aria-expanded="false" title="Expand full message">[UPnP set event: add_nat_rule] from source: 192.168.1.42, Sunday, September 20, 2026 04:18:10</button></td>
+        </tr>
+        
+        <tr>
+          <td class="time-cell"><time datetime="2026-09-20T20:06:18">09/20/2026 08:06:18 PM</time></td>
+          <td>Other Security</td>
+          <td><span class="status-pill status-info">info</span></td>
+          <td class="message-cell"><button class="message-toggle" type="button" aria-expanded="false" title="Expand full message">[UPnP set event: GetExternalIPAddress] from source: 192.168.1.37, Sunday, September 20, 2026 04:17:36</button></td>
+        </tr>
+        
+        <tr>
+          <td class="time-cell"><time datetime="2026-09-20T20:06:18">09/20/2026 08:06:18 PM</time></td>
+          <td>Other Security</td>
+          <td><span class="status-pill status-info">info</span></td>
+          <td class="message-cell"><button class="message-toggle" type="button" aria-expanded="false" title="Expand full message">[UPnP set event: add_nat_rule] from source: 192.168.1.37, Sunday, September 20, 2026 04:17:36</button></td>
+        </tr>
+        
+        <tr>
+          <td class="time-cell"><time datetime="2026-09-20T20:06:18">09/20/2026 08:06:18 PM</time></td>
+          <td>Other Security</td>
+          <td><span class="status-pill status-info">info</span></td>
+          <td class="message-cell"><button class="message-toggle" type="button" aria-expanded="false" title="Expand full message">[UPnP set event: GetExternalIPAddress] from source: 192.168.1.16, Sunday, September 20, 2026 04:14:01</button></td>
+        </tr>
+        
+        <tr>
+          <td class="time-cell"><time datetime="2026-09-20T20:06:18">09/20/2026 08:06:18 PM</time></td>
+          <td>Other Security</td>
+          <td><span class="status-pill status-info">info</span></td>
+          <td class="message-cell"><button class="message-toggle" type="button" aria-expanded="false" title="Expand full message">[UPnP set event: add_nat_rule] from source: 192.168.1.16, Sunday, September 20, 2026 04:14:01</button></td>
+        </tr>
+        
+        <tr>
+          <td class="time-cell"><time datetime="2026-09-20T20:06:18">09/20/2026 08:06:18 PM</time></td>
+          <td>Other Security</td>
+          <td><span class="status-pill status-info">info</span></td>
+          <td class="message-cell"><button class="message-toggle" type="button" aria-expanded="false" title="Expand full message">[UPnP set event: GetExternalIPAddress] from source: 192.168.1.43, Sunday, September 20, 2026 04:12:39</button></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  
+</section>
+<script src="./assets/firewall.js" defer></script>
+
+    </main>
+  </div>
+</body>
+</html>

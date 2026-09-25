@@ -1,0 +1,829 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blue Ridge Nexus Operations</title>
+  <link rel="stylesheet" href="./assets/nexus-operations.css">
+</head>
+
+<body>
+<div class="page">
+
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">Blue Ridge Nexus ARM Edition</div>
+      <h1>Nexus Operations</h1>
+      <p class="subtitle">
+        Linux fleet telemetry, containers, virtual machines, and host status.
+      </p>
+    </div>
+
+<div class="header-branding">
+  <img
+    class="header-logo"
+    src="./assets/logo.svg"
+    alt="Blue Ridge Systems"
+  >
+
+  <div class="digital-clock-wrap">
+    <div
+      class="digital-clock"
+      data-eastern-clock
+    >
+      --:--:--
+    </div>
+
+    <div class="clock-zone">
+      Eastern Time
+    </div>
+  </div>
+</div>
+
+</header>
+
+  <section class="summary-grid">
+
+    <article class="summary-card">
+      <span class="label">Fleet Health</span>
+      <strong>7 / 7</strong>
+      <small>Hosts reporting healthy</small>
+    </article>
+
+    <article class="summary-card">
+      <span class="label">Hottest Host</span>
+      <strong>ray-macbook</strong>
+      <small>
+        
+          153.6°F
+        
+      </small>
+    </article>
+
+    <article class="summary-card">
+      <span class="label">Top CPU</span>
+      <strong>ray-macbook</strong>
+      <small>
+        
+          51.8%
+        
+      </small>
+    </article>
+
+    <article class="summary-card">
+      <span class="label">Fleet Containers</span>
+      <strong id="fleet-container-summary">108</strong>
+      <small>Across monitored Linux hosts</small>
+    </article>
+
+  </section>
+
+<!-- BEGIN FLEET SCORE BANNER -->
+<section class="fleet-score-banner score-healthy">
+
+  <div class="fleet-score-main">
+    <div class="fleet-score-ring">
+      <strong>85</strong>
+      <span>/ 100</span>
+    </div>
+
+    <div>
+      <div class="eyebrow">Nexus Fleet Score</div>
+      <h2>Healthy</h2>
+      <p>
+        7 of 7 hosts reporting healthy.
+      </p>
+    </div>
+  </div>
+
+  <div class="fleet-score-stats">
+    <div>
+      <strong>0</strong>
+      <span>Excellent</span>
+    </div>
+
+    <div>
+      <strong>1</strong>
+      <span>Watch</span>
+    </div>
+
+    <div>
+      <strong>1</strong>
+      <span>Attention</span>
+    </div>
+
+    <div>
+      <strong id="fleet-container-total">108</strong>
+      <span>Containers</span>
+    </div>
+
+    <div>
+      <strong id="fleet-pod-total">29</strong>
+      <span>Pods</span>
+    </div>
+
+    <div>
+      <strong id="fleet-vm-total">10</strong>
+      <span>VMs</span>
+    </div>
+  </div>
+
+</section>
+<!-- END FLEET SCORE BANNER -->
+
+
+<!-- BEGIN NEXUS AI BRIEFING -->
+<section
+  class="panel ai-briefing-panel"
+  id="nexus-ai-briefing"
+>
+  <div class="ai-briefing-heading">
+    <div>
+      <div class="eyebrow">
+        Nexus Operations Analyst
+      </div>
+
+      <h2>AI Fleet Briefing</h2>
+
+      <p>
+        Generate Briefing to have nexus-ai/fleet_briefing analyze the latest fleet evidence.
+      </p>
+    </div>
+
+    <div class="ai-briefing-actions">
+      <span
+        class="ai-model-pill"
+        id="nexus-ai-model"
+      >
+        Checking AI model...
+      </span>
+
+      <button
+        class="ai-generate-button"
+        id="nexus-ai-generate"
+        type="button"
+      >
+        Generate Briefing
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="ai-briefing-output"
+    id="nexus-ai-output"
+    aria-live="polite"
+  >
+    Loading the latest Nexus Operations briefing...
+  </div>
+
+  <div
+    class="ai-briefing-meta"
+    id="nexus-ai-meta"
+  ></div>
+</section>
+<!-- END NEXUS AI BRIEFING -->
+
+
+
+
+
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <h2>Fleet Overview</h2>
+        <p id="fleet-inventory-status" aria-live="polite">
+          Showing the latest telemetry snapshot; refreshing live inventory...
+        </p>
+      </div>
+    </div>
+
+    <div class="table-wrap fleet-table-wrap">
+      <table class="fleet-table">
+        <thead>
+        <tr>
+          <th>Host</th>
+          <th>Status</th>
+          <th>Score</th>
+          <th>CPU</th>
+          <th>Temperature</th>
+          <th>Memory</th>
+          <th>Disk</th>
+          <th>Containers</th>
+          <th>Pods</th>
+          <th>VMs</th>
+          <th>SSH</th>
+          <th>Last Seen</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+        <tr
+          class="clickable-host-row"
+          data-host-url="#fleet"
+          data-host-name="nexus-host"
+        >
+          <td>
+            <a class="host-link" href="#fleet">
+              nexus-host
+            </a>
+            <div class="secondary">Blue Ridge Nexus</div>
+          </td>
+
+          <td>
+            <span class="status healthy">
+              Healthy
+            </span>
+          </td>
+
+          <td>
+            <div class="fleet-score score-watch">
+              <strong>78</strong>
+              <span>Watch</span>
+            </div>
+          </td>
+
+          <td>
+            30.4%
+          </td>
+
+          <td>
+            <div class="fleet-temperature">
+              <span>
+                123.8°F
+              </span>
+
+              <span class="fleet-temperature-badge
+                           temp-normal">
+                <span class="temperature-dot"></span>
+                Normal
+              </span>
+            </div>
+          </td>
+
+          <td>
+            85.0%
+          </td>
+
+          <td>
+            48.0%
+          </td>
+
+          <td
+            data-inventory-field="containers"
+            title=""
+          >
+            26
+          </td>
+          <td
+            data-inventory-field="pods"
+            title=""
+          >
+            7
+          </td>
+          <td
+            data-inventory-field="vms"
+            title=""
+          >
+            2
+          </td>
+
+          <td>
+            1579 ms
+          </td>
+
+          <td class="nowrap">
+            <span
+              class="relative-time"
+              data-timestamp="2026-09-21 01:26:59"
+              title="2026-09-21 01:26:59"
+            >
+              2026-09-21 01:26:59
+            </span>
+          </td>
+        </tr>
+        
+        <tr
+          class="clickable-host-row"
+          data-host-url="#fleet"
+          data-host-name="nexus-pi"
+        >
+          <td>
+            <a class="host-link" href="#fleet">
+              nexus-pi
+            </a>
+            <div class="secondary">Nexus ARM</div>
+          </td>
+
+          <td>
+            <span class="status healthy">
+              Healthy
+            </span>
+          </td>
+
+          <td>
+            <div class="fleet-score score-healthy">
+              <strong>90</strong>
+              <span>Healthy</span>
+            </div>
+          </td>
+
+          <td>
+            5.0%
+          </td>
+
+          <td>
+            <div class="fleet-temperature">
+              <span>
+                135.0°F
+              </span>
+
+              <span class="fleet-temperature-badge
+                           temp-normal">
+                <span class="temperature-dot"></span>
+                Normal
+              </span>
+            </div>
+          </td>
+
+          <td>
+            53.4%
+          </td>
+
+          <td>
+            70.0%
+          </td>
+
+          <td
+            data-inventory-field="containers"
+            title=""
+          >
+            24
+          </td>
+          <td
+            data-inventory-field="pods"
+            title=""
+          >
+            7
+          </td>
+          <td
+            data-inventory-field="vms"
+            title=""
+          >
+            2
+          </td>
+
+          <td>
+            3791 ms
+          </td>
+
+          <td class="nowrap">
+            <span
+              class="relative-time"
+              data-timestamp="2026-09-21 01:27:20"
+              title="2026-09-21 01:27:20"
+            >
+              2026-09-21 01:27:20
+            </span>
+          </td>
+        </tr>
+        
+        <tr
+          class="clickable-host-row"
+          data-host-url="#fleet"
+          data-host-name="nexus-staging"
+        >
+          <td>
+            <a class="host-link" href="#fleet">
+              nexus-staging
+            </a>
+            <div class="secondary">Blue Ridge Staging</div>
+          </td>
+
+          <td>
+            <span class="status healthy">
+              Healthy
+            </span>
+          </td>
+
+          <td>
+            <div class="fleet-score score-healthy">
+              <strong>85</strong>
+              <span>Healthy</span>
+            </div>
+          </td>
+
+          <td>
+            3.0%
+          </td>
+
+          <td>
+            <div class="fleet-temperature">
+              <span>
+                120.2°F
+              </span>
+
+              <span class="fleet-temperature-badge
+                           temp-normal">
+                <span class="temperature-dot"></span>
+                Normal
+              </span>
+            </div>
+          </td>
+
+          <td>
+            70.3%
+          </td>
+
+          <td>
+            36.0%
+          </td>
+
+          <td
+            data-inventory-field="containers"
+            title=""
+          >
+            37
+          </td>
+          <td
+            data-inventory-field="pods"
+            title=""
+          >
+            9
+          </td>
+          <td
+            data-inventory-field="vms"
+            title=""
+          >
+            1
+          </td>
+
+          <td>
+            1968 ms
+          </td>
+
+          <td class="nowrap">
+            <span
+              class="relative-time"
+              data-timestamp="2026-09-21 01:27:01"
+              title="2026-09-21 01:27:01"
+            >
+              2026-09-21 01:27:01
+            </span>
+          </td>
+        </tr>
+        
+        <tr
+          class="clickable-host-row"
+          data-host-url="#fleet"
+          data-host-name="ray-macbook"
+        >
+          <td>
+            <a class="host-link" href="#fleet">
+              ray-macbook
+            </a>
+            <div class="secondary">2015 MacBook Pro</div>
+          </td>
+
+          <td>
+            <span class="status healthy">
+              Healthy
+            </span>
+          </td>
+
+          <td>
+            <div class="fleet-score score-attention">
+              <strong>69</strong>
+              <span>Attention</span>
+            </div>
+          </td>
+
+          <td>
+            51.8%
+          </td>
+
+          <td>
+            <div class="fleet-temperature">
+              <span>
+                153.6°F
+              </span>
+
+              <span class="fleet-temperature-badge
+                           temp-hot">
+                <span class="temperature-dot"></span>
+                Hot
+              </span>
+            </div>
+          </td>
+
+          <td>
+            90.1%
+          </td>
+
+          <td>
+            5.0%
+          </td>
+
+          <td
+            data-inventory-field="containers"
+            title=""
+          >
+            1
+          </td>
+          <td
+            data-inventory-field="pods"
+            title=""
+          >
+            0
+          </td>
+          <td
+            data-inventory-field="vms"
+            title=""
+          >
+            1
+          </td>
+
+          <td>
+            N/A
+          </td>
+
+          <td class="nowrap">
+            <span
+              class="relative-time"
+              data-timestamp="2026-09-21 01:27:09 AM EDT"
+              title="2026-09-21 01:27:09 AM EDT"
+            >
+              2026-09-21 01:27:09 AM EDT
+            </span>
+          </td>
+        </tr>
+        
+        <tr
+          class="clickable-host-row"
+          data-host-url="#fleet"
+          data-host-name="reo-laptop"
+        >
+          <td>
+            <a class="host-link" href="#fleet">
+              reo-laptop
+            </a>
+            <div class="secondary">Fedora COSMIC Laptop</div>
+          </td>
+
+          <td>
+            <span class="status healthy">
+              Healthy
+            </span>
+          </td>
+
+          <td>
+            <div class="fleet-score score-healthy">
+              <strong>94</strong>
+              <span>Healthy</span>
+            </div>
+          </td>
+
+          <td>
+            9.6%
+          </td>
+
+          <td>
+            <div class="fleet-temperature">
+              <span>
+                127.4°F
+              </span>
+
+              <span class="fleet-temperature-badge
+                           temp-normal">
+                <span class="temperature-dot"></span>
+                Normal
+              </span>
+            </div>
+          </td>
+
+          <td>
+            16.3%
+          </td>
+
+          <td>
+            28.0%
+          </td>
+
+          <td
+            data-inventory-field="containers"
+            title=""
+          >
+            6
+          </td>
+          <td
+            data-inventory-field="pods"
+            title=""
+          >
+            2
+          </td>
+          <td
+            data-inventory-field="vms"
+            title=""
+          >
+            0
+          </td>
+
+          <td>
+            1276 ms
+          </td>
+
+          <td class="nowrap">
+            <span
+              class="relative-time"
+              data-timestamp="2026-09-21 01:27:07"
+              title="2026-09-21 01:27:07"
+            >
+              2026-09-21 01:27:07
+            </span>
+          </td>
+        </tr>
+        
+        <tr
+          class="clickable-host-row"
+          data-host-url="#fleet"
+          data-host-name="system-host-1"
+        >
+          <td>
+            <a class="host-link" href="#fleet">
+              system-host-1
+            </a>
+            <div class="secondary">Alma Edge Host 1</div>
+          </td>
+
+          <td>
+            <span class="status healthy">
+              Healthy
+            </span>
+          </td>
+
+          <td>
+            <div class="fleet-score score-healthy">
+              <strong>90</strong>
+              <span>Healthy</span>
+            </div>
+          </td>
+
+          <td>
+            3.0%
+          </td>
+
+          <td>
+            <div class="fleet-temperature">
+              <span>
+                132.9°F
+              </span>
+
+              <span class="fleet-temperature-badge
+                           temp-normal">
+                <span class="temperature-dot"></span>
+                Normal
+              </span>
+            </div>
+          </td>
+
+          <td>
+            59.6%
+          </td>
+
+          <td>
+            62.0%
+          </td>
+
+          <td
+            data-inventory-field="containers"
+            title=""
+          >
+            7
+          </td>
+          <td
+            data-inventory-field="pods"
+            title=""
+          >
+            2
+          </td>
+          <td
+            data-inventory-field="vms"
+            title=""
+          >
+            2
+          </td>
+
+          <td>
+            2751 ms
+          </td>
+
+          <td class="nowrap">
+            <span
+              class="relative-time"
+              data-timestamp="2026-09-21 01:27:03"
+              title="2026-09-21 01:27:03"
+            >
+              2026-09-21 01:27:03
+            </span>
+          </td>
+        </tr>
+        
+        <tr
+          class="clickable-host-row"
+          data-host-url="#fleet"
+          data-host-name="system-host-2"
+        >
+          <td>
+            <a class="host-link" href="#fleet">
+              system-host-2
+            </a>
+            <div class="secondary">Alma Edge Host 2</div>
+          </td>
+
+          <td>
+            <span class="status healthy">
+              Healthy
+            </span>
+          </td>
+
+          <td>
+            <div class="fleet-score score-healthy">
+              <strong>90</strong>
+              <span>Healthy</span>
+            </div>
+          </td>
+
+          <td>
+            4.9%
+          </td>
+
+          <td>
+            <div class="fleet-temperature">
+              <span>
+                124.5°F
+              </span>
+
+              <span class="fleet-temperature-badge
+                           temp-normal">
+                <span class="temperature-dot"></span>
+                Normal
+              </span>
+            </div>
+          </td>
+
+          <td>
+            47.8%
+          </td>
+
+          <td>
+            23.0%
+          </td>
+
+          <td
+            data-inventory-field="containers"
+            title=""
+          >
+            7
+          </td>
+          <td
+            data-inventory-field="pods"
+            title=""
+          >
+            2
+          </td>
+          <td
+            data-inventory-field="vms"
+            title=""
+          >
+            2
+          </td>
+
+          <td>
+            1610 ms
+          </td>
+
+          <td class="nowrap">
+            <span
+              class="relative-time"
+              data-timestamp="2026-09-21 01:27:06"
+              title="2026-09-21 01:27:06"
+            >
+              2026-09-21 01:27:06
+            </span>
+          </td>
+        </tr>
+        
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    Blue Ridge Nexus ARM Edition Preview
+  </footer>
+
+</div>
+  <script src="./assets/nexus-operations-clock.js"></script>
+  <script src="./assets/nexus-operations-fleet.js"></script>
+  <script src="./assets/nexus-operations-ai.js"></script>
+</body>
+</html>

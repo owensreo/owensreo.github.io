@@ -1,0 +1,100 @@
+name: Refresh and deploy dashboard sites
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: dashboard-pages
+  cancel-in-progress: true
+
+jobs:
+  refresh-deploy:
+    runs-on: northstar-runner
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Refresh dashboards from Nexus Host
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_host="${ANALYTICS_SOURCE_HOST:-host.containers.internal}"
+          install -d -m 0755 analytics-pages/data analytics-pages/assets
+          curl --fail --silent --show-error "http://${source_host}:8892/" > analytics-pages/firewall-analytics.html
+          curl --fail --silent --show-error "http://${source_host}:8788/" > analytics-pages/website-analytics.html
+          curl --fail --silent --show-error "http://${source_host}:8892/shared/css/nexus-analytics.css" > analytics-pages/assets/nexus-analytics.css
+          curl --fail --silent --show-error "http://${source_host}:8892/shared/js/nexus-clock.js" > analytics-pages/assets/nexus-clock.js
+          curl --fail --silent --show-error "http://${source_host}:8892/static/firewall.js" > analytics-pages/assets/firewall.js
+          curl --fail --silent --show-error "http://${source_host}:8788/static/website.css" > analytics-pages/assets/website.css
+          curl --fail --silent --show-error "http://${source_host}:8787/" > analytics-pages/nexus-operations.html
+          curl --fail --silent --show-error "http://${source_host}:8787/static/css/nexus.css" > analytics-pages/assets/nexus-operations.css
+          curl --fail --silent --show-error "http://${source_host}:8787/static/js/nexus-clock.js" > analytics-pages/assets/nexus-operations-clock.js
+          curl --fail --silent --show-error "http://${source_host}:8787/static/js/nexus-fleet.js" > analytics-pages/assets/nexus-operations-fleet.js
+          curl --fail --silent --show-error "http://${source_host}:8787/api/ai/briefing" > analytics-pages/data/ai-briefing.json
+          cp analytics-pages/assets/nexus-operations-ai-static.js analytics-pages/assets/nexus-operations-ai.js
+          cp assets/blue-ridge-systems-consulting-logo.svg analytics-pages/assets/logo.svg
+
+          for page in analytics-pages/firewall-analytics.html analytics-pages/website-analytics.html; do
+            sed -i \
+              -e 's#href="/shared/css/nexus-analytics.css"#href="./assets/nexus-analytics.css"#g' \
+              -e 's#src="/shared/js/nexus-clock.js[^\"]*"#src="./assets/nexus-clock.js"#g' \
+              -e 's#src="/shared/assets/blue-ridge-systems-logo.jpeg"#src="./assets/logo.svg"#g' \
+              -e 's#src="/static/firewall.js"#src="./assets/firewall.js"#g' \
+              -e 's#href="/static/website.css"#href="./assets/website.css"#g' \
+              -e 's|href="/events"|href="#events"|g' \
+              -e 's|href="/history"|href="#history"|g' \
+              "$page"
+          done
+          sed -i -E 's/[Nn]etgear/Blue Ridge Firewall/g; s/[Rr]outer/firewall/g' analytics-pages/firewall-analytics.html
+          sed -i \
+            -e 's#href="/static/css/nexus.css"#href="./assets/nexus-operations.css"#g' \
+            -e 's#src="/static/assets/logo-dark.jpeg"#src="./assets/logo.svg"#g' \
+            -e 's#src="/static/js/nexus-clock.js"#src="./assets/nexus-operations-clock.js"#g' \
+            -e 's#src="/static/js/nexus-fleet.js"#src="./assets/nexus-operations-fleet.js"#g' \
+            -e 's#src="/static/js/nexus-ai.js"#src="./assets/nexus-operations-ai.js"#g' \
+            -e 's|href="/host/[^"]*"|href="#fleet"|g' \
+            -e 's|data-host-url="/host/[^"]*"|data-host-url="#fleet"|g' \
+            analytics-pages/nexus-operations.html
+
+      - name: Publish refreshed files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add analytics-pages
+          if ! git diff --cached --quiet; then
+            git commit -m "Refresh dashboard sites"
+            git push origin HEAD:main
+          fi
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Assemble numeric dashboard paths
+        shell: bash
+        run: |
+          rm -rf _pages-site
+          mkdir -p _pages-site/731582 _pages-site/248907 _pages-site/694331
+          cp analytics-pages/firewall-analytics.html _pages-site/731582/index.html
+          cp analytics-pages/website-analytics.html _pages-site/248907/index.html
+          cp analytics-pages/nexus-operations.html _pages-site/694331/index.html
+          for path in 731582 248907 694331; do
+            cp -R analytics-pages/assets _pages-site/$path/assets
+          done
+          cp -R analytics-pages/data _pages-site/694331/data
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _pages-site
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
