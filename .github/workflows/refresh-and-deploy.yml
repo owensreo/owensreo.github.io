@@ -85,10 +85,11 @@ jobs:
         shell: bash
         run: |
           rm -rf _pages-site
-          mkdir -p _pages-site/731582 _pages-site/248907 _pages-site/694331
+          mkdir -p _pages-site/731582 _pages-site/248907 _pages-site/694331 _pages-site/853104
           cp analytics-pages/firewall-analytics.html _pages-site/731582/index.html
           cp analytics-pages/website-analytics.html _pages-site/248907/index.html
           cp analytics-pages/nexus-operations.html _pages-site/694331/index.html
+          cp analytics-pages/isp-analytics.html _pages-site/853104/index.html
           for path in 731582 248907 694331; do
             cp -R analytics-pages/assets _pages-site/$path/assets
           done
