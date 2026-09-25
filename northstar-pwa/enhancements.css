@@ -1,4 +1,6 @@
 .runner small { display: block; }
+.actions { align-items: center; }
+#auto-refresh { color: var(--muted2); font-size: .76rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .runner #workflow-health,
 .runner #last-updated { color: var(--muted2); font-size: .74rem; margin-top: 2px; }
 .cards article:last-child strong { font-size: 1.35rem; overflow-wrap: anywhere; }
@@ -39,4 +41,4 @@
 #report-position { color: var(--muted2); font-size: .82rem; padding-bottom: 10px; }
 button:disabled { cursor: not-allowed; filter: none; opacity: .45; }
 .report-toolbar select { min-width: min(420px, 78vw); }
-@media (max-width: 720px) { .fleet-tools { grid-template-columns: 1fr; } }
+@media (max-width: 720px) { .fleet-tools { grid-template-columns: 1fr; } #auto-refresh { display: none; } }

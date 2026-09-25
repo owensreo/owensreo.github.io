@@ -6,6 +6,21 @@ let reportIndex = [];
 let reportCursor = 0;
 let fleetPeers = [];
 let latestReportState = 'Current';
+const AUTO_REFRESH_MS = 30 * 60 * 1000;
+let nextRefreshAt = Date.now() + AUTO_REFRESH_MS;
+let refreshInFlight = false;
+
+function updateAutoRefreshLabel() {
+  if (document.hidden) {
+    $('auto-refresh').textContent = 'Auto-refresh paused';
+    return;
+  }
+  const remaining = Math.max(0, nextRefreshAt - Date.now());
+  const totalSeconds = Math.ceil(remaining / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = String(totalSeconds % 60).padStart(2, '0');
+  $('auto-refresh').textContent = `Auto-refresh ${minutes}:${seconds}`;
+}
 
 async function get(path) {
   const base = config().url.replace(/\/$/, '');
@@ -207,6 +222,8 @@ function showError(error) {
 }
 
 async function refresh() {
+  if (refreshInFlight) return;
+  refreshInFlight = true;
   const button = $('refresh');
   button.disabled = true;
   button.textContent = 'Refreshing…';
@@ -243,6 +260,9 @@ async function refresh() {
   } catch (error) {
     showError(error);
   } finally {
+    refreshInFlight = false;
+    nextRefreshAt = Date.now() + AUTO_REFRESH_MS;
+    updateAutoRefreshLabel();
     button.disabled = false;
     button.textContent = 'Refresh';
   }
@@ -274,4 +294,14 @@ $('raw-toggle').onclick = () => {
 };
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && Date.now() >= nextRefreshAt) refresh();
+  else updateAutoRefreshLabel();
+});
+setInterval(() => {
+  if (document.hidden || refreshInFlight) return;
+  if (Date.now() >= nextRefreshAt) refresh();
+  else updateAutoRefreshLabel();
+}, 1000);
+updateAutoRefreshLabel();
 refresh();
