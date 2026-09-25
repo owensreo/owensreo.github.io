@@ -25,7 +25,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          source_host="${ANALYTICS_SOURCE_HOST:-host.containers.internal}"
+          source_host="${ANALYTICS_SOURCE_HOST:-192.168.1.24}"
           install -d -m 0755 analytics-pages/data analytics-pages/assets
           curl --fail --silent --show-error "http://${source_host}:8892/" > analytics-pages/firewall-analytics.html
           curl --fail --silent --show-error "http://${source_host}:8788/" > analytics-pages/website-analytics.html
