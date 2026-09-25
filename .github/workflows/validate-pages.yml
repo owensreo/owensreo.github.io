@@ -1,0 +1,27 @@
+name: Validate Pages workflow
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/refresh-and-deploy.yml"
+      - ".github/workflows/validate-pages.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate Web Vitals publishing contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          workflow=.github/workflows/refresh-and-deploy.yml
+          grep -F 'repository: owensreo/tailscale-policy' "$workflow"
+          grep -F 'ssh-key:' "$workflow"
+          grep -F 'TAILSCALE_POLICY_DEPLOY_KEY' "$workflow"
+          grep -F '_pages-site/31266633' "$workflow"

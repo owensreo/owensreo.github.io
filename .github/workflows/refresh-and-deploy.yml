@@ -26,6 +26,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check out Web Vitals dashboard source
+        uses: actions/checkout@v4
+        with:
+          repository: owensreo/tailscale-policy
+          ref: main
+          path: web-vitals-source
+          sparse-checkout: web-vitals-20260924
+          ssh-key: ${{ secrets.TAILSCALE_POLICY_DEPLOY_KEY }}
+          persist-credentials: false
+
       - name: Refresh dashboards from Nexus Host
         shell: bash
         run: |
@@ -89,12 +99,13 @@ jobs:
         shell: bash
         run: |
           rm -rf _pages-site
-          mkdir -p _pages-site/731582 _pages-site/248907 _pages-site/694331 _pages-site/853104 _pages-site/${NORTHSTAR_PAGES_PATH}
+          mkdir -p _pages-site/731582 _pages-site/248907 _pages-site/694331 _pages-site/853104 _pages-site/${NORTHSTAR_PAGES_PATH} _pages-site/31266633
           cp -R northstar-pwa/. _pages-site/${NORTHSTAR_PAGES_PATH}/
           cp analytics-pages/firewall-analytics.html _pages-site/731582/index.html
           cp analytics-pages/website-analytics.html _pages-site/248907/index.html
           cp analytics-pages/nexus-operations.html _pages-site/694331/index.html
           cp analytics-pages/isp-analytics.html _pages-site/853104/index.html
+          cp -R web-vitals-source/web-vitals-20260924/. _pages-site/31266633/
           for path in 731582 248907 694331; do
             cp -R analytics-pages/assets _pages-site/$path/assets
           done
