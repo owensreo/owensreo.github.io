@@ -31,6 +31,7 @@ jobs:
           path: web-vitals-source
           sparse-checkout: web-vitals-20260924
           ssh-key: ${{ secrets.TAILSCALE_POLICY_DEPLOY_KEY }}
+          persist-credentials: false
 
       - name: Refresh dashboards from Nexus Host
         shell: bash
