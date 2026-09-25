@@ -10,6 +10,9 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  NORTHSTAR_PAGES_PATH: 2fa5556c815c8c06
+
 concurrency:
   group: dashboard-pages
   cancel-in-progress: true
@@ -62,6 +65,7 @@ jobs:
               -e 's#href="/static/website.css"#href="./assets/website.css"#g' \
               -e 's|href="/events"|href="#events"|g' \
               -e 's|href="/history"|href="#history"|g' \
+              -e 's|<button class="refresh-button" type="button" data-refresh-button>Refresh</button>|<a class="refresh-button" href="./">Refresh</a>|g' \
               "$page"
           done
           sed -i -E 's/[Nn]etgear/Blue Ridge Firewall/g; s/[Rr]outer/firewall/g' analytics-pages/firewall-analytics.html
@@ -95,7 +99,8 @@ jobs:
         shell: bash
         run: |
           rm -rf _pages-site
-          mkdir -p _pages-site/731582 _pages-site/248907 _pages-site/694331 _pages-site/853104 _pages-site/31266633
+          mkdir -p _pages-site/731582 _pages-site/248907 _pages-site/694331 _pages-site/853104 _pages-site/${NORTHSTAR_PAGES_PATH} _pages-site/31266633
+          cp -R northstar-pwa/. _pages-site/${NORTHSTAR_PAGES_PATH}/
           cp analytics-pages/firewall-analytics.html _pages-site/731582/index.html
           cp analytics-pages/website-analytics.html _pages-site/248907/index.html
           cp analytics-pages/nexus-operations.html _pages-site/694331/index.html
