@@ -17,6 +17,8 @@ concurrency:
 jobs:
   refresh-deploy:
     runs-on: northstar-runner
+    environment:
+      name: github-pages
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
