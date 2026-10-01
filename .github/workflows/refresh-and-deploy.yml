@@ -106,7 +106,7 @@ jobs:
           cp analytics-pages/nexus-operations.html _pages-site/694331/index.html
           cp analytics-pages/isp-analytics.html _pages-site/853104/index.html
           cp -R web-vitals-source/web-vitals-20260924/. _pages-site/31266633/
-          for path in 731582 248907 694331; do
+          for path in 731582 248907 694331 853104; do
             cp -R analytics-pages/assets _pages-site/$path/assets
           done
           cp -R analytics-pages/data _pages-site/694331/data
