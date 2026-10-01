@@ -32,7 +32,11 @@ jobs:
           repository: owensreo/tailscale-policy
           ref: main
           path: web-vitals-source
-          sparse-checkout: web-vitals-20260924
+          sparse-checkout: |
+            web-vitals-20260924
+            analytics-pages/firewall-analytics.html
+            analytics-pages/website-analytics.html
+            analytics-pages/assets/nexus-d1.js
           ssh-key: ${{ secrets.TAILSCALE_POLICY_DEPLOY_KEY }}
           persist-credentials: false
 
@@ -42,8 +46,9 @@ jobs:
           set -euo pipefail
           source_host="${ANALYTICS_SOURCE_HOST:-192.168.1.24}"
           install -d -m 0755 analytics-pages/data analytics-pages/assets
-          curl --fail --silent --show-error "http://${source_host}:8892/" > analytics-pages/firewall-analytics.html
-          curl --fail --silent --show-error "http://${source_host}:8788/" > analytics-pages/website-analytics.html
+          cp web-vitals-source/analytics-pages/firewall-analytics.html analytics-pages/firewall-analytics.html
+          cp web-vitals-source/analytics-pages/website-analytics.html analytics-pages/website-analytics.html
+          cp web-vitals-source/analytics-pages/assets/nexus-d1.js analytics-pages/assets/nexus-d1.js
           curl --fail --silent --show-error "http://${source_host}:8892/shared/css/nexus-analytics.css" > analytics-pages/assets/nexus-analytics.css
           curl --fail --silent --show-error "http://${source_host}:8892/shared/js/nexus-clock.js" > analytics-pages/assets/nexus-clock.js
           curl --fail --silent --show-error "http://${source_host}:8892/static/firewall.js" > analytics-pages/assets/firewall.js
