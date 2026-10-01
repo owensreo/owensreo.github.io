@@ -5,12 +5,173 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>ISP Analytics · Blue Ridge Nexus</title>
-  <style>
-    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #07111e; }
-    iframe { display: block; width: 100%; height: 100%; border: 0; }
-  </style>
+  <link rel="stylesheet" href="./assets/nexus-analytics.css">
+  <script src="./assets/nexus-clock.js" defer></script>
 </head>
 <body>
-  <iframe title="Live ISP Analytics dashboard" src="https://northstar-runner.tail57c12c.ts.net/isp-analytics"></iframe>
+  <a class="skip-link" href="#main-content">Skip to dashboard content</a>
+  <div class="page-shell">
+    <header class="app-header">
+  <div class="brand-cluster">
+    <img class="brand-logo" src="./assets/logo.svg" alt="Blue Ridge Systems">
+    <div class="digital-clock" data-eastern-clock aria-label="Current Eastern Time">
+      <time class="digital-clock-time" data-eastern-time>--:--:-- --</time>
+      <span class="digital-clock-label">Eastern Time</span>
+    </div>
+  </div>
+
+  <div class="header-copy">
+    <p class="eyebrow">Blue Ridge Nexus Analytics</p>
+    <h1>ISP Analytics</h1>
+    <p class="subtitle">Executive view of connection health and 24-hour performance.</p>
+  </div>
+
+  <div class="header-status">
+    <span class="status-pill status-neutral" data-isp-status>Loading Nexus Pi D1</span>
+    <span class="refresh-meta" data-isp-updated>Waiting for D1</span>
+    <button class="refresh-button" type="button" data-refresh-button>Refresh</button>
+  </div>
+</header>
+    <main id="main-content" tabindex="-1">
+
+<section class="kpi-grid" aria-label="ISP key performance indicators">
+
+
+  <article class="kpi-card"><span class="kpi-label">Download</span><strong class="kpi-value" data-isp-field="latest_download_mbps" data-unit=" Mbps">Loading…</strong><span class="kpi-context">Latest test · D1</span></article>
+
+  <article class="kpi-card"><span class="kpi-label">Upload</span><strong class="kpi-value" data-isp-field="latest_upload_mbps" data-unit=" Mbps">Loading…</strong><span class="kpi-context">Latest test · D1</span></article>
+
+  <article class="kpi-card"><span class="kpi-label">Ping</span><strong class="kpi-value" data-isp-field="latest_latency_ms" data-unit=" ms">Loading…</strong><span class="kpi-context">Latest test · D1</span></article>
+
+  <article class="kpi-card"><span class="kpi-label">Packet loss</span><strong class="kpi-value">—</strong><span class="kpi-context">Not included in D1 sync</span></article>
+
+  <article class="kpi-card"><span class="kpi-label">ISP health</span><strong class="kpi-value">—</strong><span class="kpi-context">Not included in D1 sync</span></article>
+
+</section>
+
+<section class="summary-grid speed-summary" aria-label="ISP D1 performance history">
+  <article class="panel">
+    <div class="panel-heading"><div><h2>24-hour trend</h2><p>D1 snapshots · 24-hour ISP test volume</p></div></div>
+    <div class="trend-chart" data-isp-history aria-label="ISP test volume from D1 history"><p>Loading D1 history…</p></div>
+    <div class="trend-legend"><span class="legend-down">Tests recorded per snapshot</span></div>
+  </article>
+  <article class="panel detail-panel">
+    <div class="panel-heading"><div><h2>Connection context</h2><p>Latest D1 snapshot · last 24 hours</p></div></div>
+    <dl class="detail-list">
+      <div><dt>Latest test</dt><dd data-isp-latest>Loading…</dd></div>
+      <div><dt>Data source</dt><dd>Nexus Pi → Cloudflare D1</dd></div>
+      <div><dt>Tests in 24 hours</dt><dd data-isp-value="tests">—</dd></div>
+      <div><dt>Successful tests</dt><dd data-isp-value="successful">—</dd></div>
+      <div><dt>Failed tests</dt><dd data-isp-value="failed">—</dd></div>
+      <div><dt>Average down / up</dt><dd data-isp-averages>—</dd></div>
+    </dl>
+  </article>
+</section>
+
+<section class="panel">
+  <div class="panel-heading"><div><h2>D1 history</h2><p>Latest 10 ISP summary snapshots from Cloudflare D1</p></div></div>
+  <div class="table-scroll"><table><thead><tr><th>Time</th><th>24-hour ISP tests</th></tr></thead>
+  <tbody data-isp-history-table><tr><td colspan="2">Loading D1 history…</td></tr></tbody></table></div>
+</section>
+
+    </main>
+  </div>
+<script>
+(function () {
+  "use strict";
+  const endpoint = "https://nexus-pi.tail57c12c.ts.net:8443/api/analytics/isp";
+  const status = document.querySelector("[data-isp-status]");
+  const updated = document.querySelector("[data-isp-updated]");
+  const historyChart = document.querySelector("[data-isp-history]");
+  const historyTable = document.querySelector("[data-isp-history-table]");
+  const format = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
+  const eastern = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York", month: "2-digit", day: "2-digit",
+    year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true
+  });
+  const value = (number, unit = "") => number == null || !Number.isFinite(Number(number)) ? "—" : format.format(Number(number)) + unit;
+  const stamp = (raw) => raw ? eastern.format(new Date(raw)) + " ET" : "—";
+  function setError() {
+    document.querySelectorAll("[data-isp-field]").forEach((field) => { field.textContent = "Unavailable"; });
+    if (status) { status.textContent = "D1 unavailable"; status.className = "status-pill status-stale"; }
+    if (updated) updated.textContent = "Could not read Nexus Pi D1";
+    if (historyChart) historyChart.textContent = "ISP history is unavailable.";
+    if (historyTable) historyTable.innerHTML = '<tr><td colspan="2">ISP history is unavailable.</td></tr>';
+  }
+  function renderHistory(points) {
+    const rows = (points || []).filter((point) => point.metric === "tests").slice(-48);
+    if (!rows.length) {
+      historyChart.textContent = "No ISP history has been published to D1 yet.";
+      historyTable.innerHTML = '<tr><td colspan="2">No ISP history is available yet.</td></tr>';
+      return;
+    }
+    const max = Math.max(...rows.map((point) => Number(point.value) || 0), 1);
+    historyChart.replaceChildren();
+    rows.slice(-8).forEach((point) => {
+      const sample = document.createElement("div");
+      sample.className = "trend-sample";
+      sample.style.gridTemplateColumns = "42px minmax(0, 1fr)";
+      const time = document.createElement("span");
+      time.className = "trend-time";
+      time.textContent = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", hour12: false
+      }).format(new Date(point.recorded_at));
+      const track = document.createElement("span");
+      track.className = "trend-track";
+      const bar = document.createElement("i");
+      bar.className = "trend-down";
+      bar.style.width = Math.max(2, Number(point.value) / max * 100) + "%";
+      bar.title = value(point.value) + " tests";
+      track.append(bar);
+      sample.append(time, track);
+      historyChart.append(sample);
+    });
+    historyTable.replaceChildren();
+    rows.slice(-10).reverse().forEach((point) => {
+      const row = document.createElement("tr");
+      const time = document.createElement("td");
+      time.className = "time-cell";
+      time.textContent = stamp(point.recorded_at);
+      const tests = document.createElement("td");
+      tests.textContent = value(point.value);
+      row.append(time, tests);
+      historyTable.append(row);
+    });
+  }
+  async function refresh() {
+    try {
+      const response = await fetch(endpoint, { cache: "no-store" });
+      if (!response.ok) throw new Error("Nexus Pi D1 returned HTTP " + response.status);
+      const payload = await response.json();
+      const snapshot = payload.dashboard;
+      if (!snapshot || snapshot.dashboard !== "isp" || snapshot.source !== "nexus-pi") {
+        throw new Error("Nexus Pi ISP snapshot is unavailable");
+      }
+      const details = snapshot.details || {};
+      document.querySelectorAll("[data-isp-field]").forEach((field) => {
+        const key = field.dataset.ispField;
+        const unit = field.dataset.unit || "";
+        field.textContent = value(details[key], unit);
+      });
+      document.querySelectorAll("[data-isp-value]").forEach((field) => {
+        field.textContent = value(details[field.dataset.ispValue]);
+      });
+      const averages = document.querySelector("[data-isp-averages]");
+      if (averages) averages.textContent = value(details.average_download_mbps) + " / " + value(details.average_upload_mbps) + " Mbps";
+      const latest = document.querySelector("[data-isp-latest]");
+      if (latest) latest.textContent = stamp(snapshot.source_updated_at || details.latest);
+      if (status) { status.textContent = "Nexus Pi · D1"; status.className = "status-pill status-healthy"; }
+      if (updated) updated.textContent = "Refreshed " + stamp(snapshot.updated_at);
+      renderHistory(payload.history || []);
+    } catch (error) {
+      setError();
+      console.error("ISP D1 refresh failed:", error);
+    }
+  }
+  const button = document.querySelector("[data-refresh-button]");
+  if (button) button.addEventListener("click", refresh);
+  refresh();
+}());
+</script>
 </body>
 </html>
