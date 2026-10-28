@@ -1,3 +1,5 @@
+<p align="center"><img src="../assets/blue-ridge-systems-consulting-logo-wide.svg" alt="Blue Ridge Systems Consulting" width="480"></p>
+
 # Northstar Guard PWA
 
 This is a static, read-only dashboard for the Northstar API. It contains no
