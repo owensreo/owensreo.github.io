@@ -49,6 +49,16 @@
     if (hours < 48) return `${hours}h ago`;
     return `${Math.floor(hours / 24)}d ago`;
   };
+  const syncCurrent = (value) => {
+    const timestamp = new Date(value).valueOf();
+    return Boolean(value) && Number.isFinite(timestamp) && timestamp <= Date.now() + 60000 && Date.now() - timestamp <= 30 * 60000;
+  };
+  const setFreshness = (sourceUpdatedAt, publishedAt) => {
+    const current = syncCurrent(publishedAt);
+    setStatus(publishedAt, current ? "D1 sync current" : "D1 sync delayed", !current);
+    const status = byClass(".header-status .status-pill");
+    if (status) status.title = `Source: ${sourceUpdatedAt ? formatTime(sourceUpdatedAt) : "unknown"}; D1 sync: ${publishedAt ? formatTime(publishedAt) : "unknown"} (Eastern)`;
+  };
 
   // Remove the build-time preview numbers before the first request so an
   // offline page can never be mistaken for current D1 telemetry.
@@ -116,8 +126,7 @@
 
     const latest = details.latest || sourceUpdatedAt;
     const latestText = latest ? formatTime(latest) : "—";
-    const syncTimestamp = new Date(publishedAt).valueOf();
-    const syncIsCurrent = Number.isFinite(syncTimestamp) && Date.now() - syncTimestamp <= 30 * 60000 && syncTimestamp <= Date.now() + 60000;
+    const syncIsCurrent = syncCurrent(publishedAt);
     const healthStatus = byClass("[data-health-status]");
     if (healthStatus) {
       healthStatus.textContent = syncIsCurrent ? "D1 sync current" : "D1 sync delayed";
@@ -130,10 +139,10 @@
     if (healthLatest) healthLatest.textContent = latestText;
     const healthRecords = byClass("[data-health-records]");
     if (healthRecords) healthRecords.textContent = `${Math.min(points.length, 24)} of 24 hours`;
-    setStatus(publishedAt || sourceUpdatedAt, syncIsCurrent ? "Nexus Pi · D1 current" : "Nexus Pi · D1 delayed", !syncIsCurrent);
+    setFreshness(sourceUpdatedAt, publishedAt);
   }
 
-  function updateFirewall(details, updatedAt) {
+  function updateFirewall(details, sourceUpdatedAt, publishedAt) {
     const kpis = cards();
     const events = Number(details.events || 0);
     const warnings = Number(details.warnings || 0);
@@ -182,7 +191,7 @@
         return row;
       }));
     }
-    setStatus(updatedAt);
+    setFreshness(sourceUpdatedAt, publishedAt);
   }
 
   fetch(`${endpoint}${dashboard}`, { cache: "no-store" })
@@ -194,7 +203,7 @@
       const snapshot = payload.dashboard;
       if (!snapshot || snapshot.source !== "nexus-pi") throw new Error("Nexus Pi data is not available yet");
       if (dashboard === "website") updateWebsite(snapshot.details || {}, snapshot.source_updated_at, snapshot.updated_at);
-      if (dashboard === "firewall") updateFirewall(snapshot.details || {}, snapshot.source_updated_at);
+      if (dashboard === "firewall") updateFirewall(snapshot.details || {}, snapshot.source_updated_at, snapshot.updated_at);
     })
     .catch((error) => {
       const status = byClass(".header-status .status-pill");
